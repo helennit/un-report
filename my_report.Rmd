@@ -1,0 +1,93 @@
+---
+title: "Writing Reports with R Markdown"
+author: "Helena Nitschky"
+date: '2023-03-29'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, include=FALSE}
+library(tidyverse)
+```
+
+This report was prepared to the attention of the United Nations. It analyzes the relationship between a country's GDP, its life expectancy and CO2 emissions. Our goal is to determine to what degree a country's economic strength or weakness may be related to its publichealth status and impact on climate pollution. We hypothesize that both life expectacy and CO2 emissions increase with a country's GDP. 
+
+```{r loading data, include=FALSE}
+gapminder_1997 <- read_csv("data/gapminder_1997.csv")
+```
+
+```{r gdp_lifeexp_1997, echo =FALSE}
+ggplot(data = gapminder_1997) + #plus sign instead of pipe because ggplot
+  aes(x = gdpPercap, y = lifeExp, color = continent, size = pop/1000000) + 
+  geom_point() + 
+  labs(x = "GDP (per capita)",
+       y = "Life Expectancy", 
+       title = "Do people in wealthy countries live longer?", 
+       size = "Population (in millions")
+```
+
+```{r}
+nCountries <- gapminder_1997 %>% 
+  select(country) %>% 
+  n_distinct()
+
+minGDP <- gapminder_1997 %>% 
+  summarize(round(min(gdpPercap))) %>% 
+  pull()
+
+maxGDP <- gapminder_1997 %>% 
+  summarize(round(max(gdpPercap))) %>% 
+  pull()
+
+```
+
+The above plot shows the relationship between GDP per capita and life expectancy for a total `r nCountries`. For this set of countries, economic wealth ranged from a minimum of USD `r minGDP` to a maximum of USD `r maxGDP`.
+
+|HEADER 1|HEADER 2| 
+|--------|--------|
+|row 1, column 1|row 1, column 2|
+|row 2, column 1|row 2, column 1|
+
+|Summary of Data| 
+|--------|--------|
+|Number of Countries|`r nCountries`|
+|Minimum GDP per capita|`r minGDP`|
+|Maximum GDP per capita|`r maxGDP`|
+
+```{r kabletabl}
+library(knitr)
+
+gapminder_1997 %>% 
+  filter(continent == "Oceania") %>% 
+  kable()
+```
+
+# Header1
+## Header2 
+### Header3
+
+#Exercise R Markdown Syntax
+* Create a bullet point list with three items
+* As the first item, write the name of your currently favorite programing language in bold
+* As the second item, write the name of a function you have found most useful in italics 
+* Turn your bullet point list into numbered list 
+* Create a fourth list item and find an online and or cheat sheet for basic Markdown syntax, write its name down here and hyperlink its url 
+
+## Bullet List Exercise 
+
+- **Snakemake** is my favorite programming language 
+- *filter()* is the most useful function. 
+- Differential Expression/Multivariate Analysis 
+
+1) **Snakemake** is my favorite programming language 
+2) *filter()* is the most useful function. 
+3) Differential Expression/Multivariate Analysis 
+4) <chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf>
+
+
+
+
+
